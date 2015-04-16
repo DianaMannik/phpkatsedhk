@@ -134,7 +134,15 @@
 								
 								<dt>Kodakondsus:</dt>
 								<dt>
-									
+									<select name="kodakondsus">
+										<?php
+											$riigid=array("EST", "GBR", "USA");
+											if(isSet($_REQUEST["kodakondsus"])){$_REQUEST["kodakondsus"];}
+											for($riigi_nr=0; $riigi_nr<count($riigid); $riigi_nr++){
+												echo "<option value='$riigid[$riigi_nr]' >$riigid[$riigi_nr]</option>\n";
+											}
+										?> 
+									</select><br>
 								</dt>
 								
 							</dl>

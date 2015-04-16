@@ -113,9 +113,18 @@
 									<input type="text" name="auhind" />
 								</dt>
 								
-								<dt>Saaja (id):</dt>
+								<dt>Saaja:</dt>
 								<dt>
-									<input type="text" name="saaja_id" />
+									<select name="saaja_id">
+										<?php
+											$esitajad=array("Vali saaja", "Üllar Jörberg", "Michael Jackson", "Freddie Mercury", "Elton John", "Tina Turner");
+											$valiku_nr=0;
+											if(isSet($_REQUEST["saaja_id"])){$valiku_nr=intval($_REQUEST["saaja_id"]);} //intval teeb numbriks
+											for($esitaja_nr=0; $esitaja_nr<count($esitajad); $esitaja_nr++){
+												echo "<option value='$esitaja_nr' >$esitajad[$esitaja_nr]</option>\n";
+											}
+										?> 
+									</select><br>
 								</dt>
 								
 								<dt>Kommentaar:</dt>

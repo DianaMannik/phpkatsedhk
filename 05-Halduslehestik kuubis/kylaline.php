@@ -53,8 +53,8 @@
 						<td>Vali album:</td><br>
 						<select name="albumi_id">
 							<?php
-								$albumid=array("Õnnelootus", "Bad", "The Road to El Dorado", "Foreign Affair");
-								$valiku_nr=1;
+								$albumid=array("Vali album", "Õnnelootus", "Bad", "The Road to El Dorado", "Foreign Affair");
+								$valiku_nr=0;
 								if(isSet($_REQUEST["albumi_id"])){$valiku_nr=intval($_REQUEST["albumi_id"]);} //intval teeb numbriks
 								for($albumi_nr=0; $albumi_nr<count($albumid); $albumi_nr++){
 									echo "<option value='$albumi_nr' >$albumid[$albumi_nr]</option>\n";
@@ -76,19 +76,19 @@
 						<h3>Teiste kommentaarid:</h3>
 						<?php
 							$kask=$yhendus->prepare(
-								"SELECT id, albumi_id, kommentaar, kasutajanimi FROM m_kommentaarid");
-							$kask->bind_result($id, $albumi_id, $kommentaar, $kasutajanimi);
+								"SELECT albumi_id, kommentaar, kasutajanimi FROM m_kommentaarid");
+							$kask->bind_result($albumi_id, $kommentaar, $kasutajanimi);
 							$kask->execute();
 							while($kask->fetch()){
 								$albumi_id=htmlspecialchars($albumi_id);
-								$kommentaar=nl2br(htmlspecialchars($kommentaar));
 								$kasutajanimi=nl2br(htmlspecialchars($kasutajanimi));
+								$kommentaar=nl2br(htmlspecialchars($kommentaar));
 								echo "<tr>
 								  <td>$albumi_id</td>
 								  <td>$kasutajanimi</td>
 								  <td>$kommentaar</td>
 								</tr>";
-							 }
+							}
 						?>
 				<?php
 				}

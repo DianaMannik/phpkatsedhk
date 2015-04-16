@@ -132,12 +132,12 @@
 									<input type="text" name="albumi_pealkiri" />
 								</dt>
 								
-								<dt>Esitaja (id):</dt>
+								<dt>Esitaja:</dt>
 								<dt>
 									<select name="esitaja_id">
 										<?php
-											$esitajad=array("Üllar Jörberg", "Michael Jackson", "Freddie Mercury", "Elton John", "Tina Turner");
-											$valiku_nr=1;
+											$esitajad=array("Vali esitaja", "Üllar Jörberg", "Michael Jackson", "Freddie Mercury", "Elton John", "Tina Turner");
+											$valiku_nr=0;
 											if(isSet($_REQUEST["esitaja_id"])){$valiku_nr=intval($_REQUEST["esitaja_id"]);} //intval teeb numbriks
 											for($esitaja_nr=0; $esitaja_nr<count($esitajad); $esitaja_nr++){
 												echo "<option value='$esitaja_nr' >$esitajad[$esitaja_nr]</option>\n";
@@ -156,10 +156,9 @@
 									<select name="zanri_id">
 										<?php
 											$zanrid=array("folk", "hip-hop", "klassika", "metal", "pop");
-											$valiku_nr=1;
-											if(isSet($_REQUEST["zanri_id"])){$valiku_nr=$_REQUEST["zanri_id"];} //intval teeb numbriks
+											if(isSet($_REQUEST["zanri_id"])){$_REQUEST["zanri_id"];}
 											for($zanri_nr=0; $zanri_nr<count($zanrid); $zanri_nr++){
-												echo "<option value='$zanri_nr' >$zanrid[$zanri_nr]</option>\n";
+												echo "<option value='$zanrid[$zanri_nr]' >$zanrid[$zanri_nr]</option>\n";
 											}
 										?> 
 									</select><br>
@@ -169,8 +168,8 @@
 								<dt>
 									<select name="plaadifirma_id">
 										<?php
-											$firmad=array("1", "2", "3", "4", "5", "6", "7", "8");
-											$valiku_nr=1;
+											$firmad=array("Vali", "1", "2", "3", "4", "5", "6", "7", "8");
+											$valiku_nr=0;
 											if(isSet($_REQUEST["plaadifirma_id"])){$valiku_nr=intval($_REQUEST["plaadifirma_id"]);} //intval teeb numbriks
 											for($firma_nr=0; $firma_nr<count($firmad); $firma_nr++){
 												echo "<option value='$firma_nr' >$firmad[$firma_nr]</option>\n";
@@ -184,10 +183,9 @@
 									<select name="hinnangu_id">
 										<?php
 											$hinnangud=array("*", "* *", "* * *", "* * * *", "* * * * *");
-											$valiku_nr=1;
-											if(isSet($_REQUEST["hinnangu_id"])){$valiku_nr=$_REQUEST["hinnangu_id"];} //intval teeb numbriks
+											if(isSet($_REQUEST["hinnangu_id"])){$_REQUEST["hinnangu_id"];}
 											for($hinnangu_nr=0; $hinnangu_nr<count($hinnangud); $hinnangu_nr++){
-												echo "<option value='$hinnangu_nr' >$hinnangud[$hinnangu_nr]</option>\n";
+												echo "<option value='$hinnangud[$hinnangu_nr]' >$hinnangud[$hinnangu_nr]</option>\n";
 											}
 										?> 
 									</select><br>

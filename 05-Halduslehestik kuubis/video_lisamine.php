@@ -22,44 +22,6 @@
 		$kask->bind_param("isi",  $_REQUEST["laulu_id"], $_REQUEST["link"], $_REQUEST[muutmise_salvestus_id]); //tänu muutmise_salvestus_id'le teab, millist lehe muutused salvestada
 		$kask->execute();
 	}
-
-function autolink($string){
-    // force http: on www.
-    $string = str_ireplace( "www.", "http://www.", $string );
-    // eliminate duplicates after force
-    $string = str_ireplace( "http://http://www.", "http://www.", $string );
-    $string = str_ireplace( "https://http://www.", "https://www.", $string );
-
-    // The Regular Expression filter
-    $reg_exUrl = "/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
-    // Check if there is a url in the text
-
-$m = preg_match_all($reg_exUrl, $string, $match); 
-
-if ($m) { 
-$links=$match[0]; 
-for ($j=0;$j<$m;$j++) { 
-
-    if(substr($links[$j], 0, 18) == 'http://www.youtube'){
-
-    $string=str_replace($links[$j],'<a href="'.$links[$j].'" rel="nofollow" target="_blank">'.$links[$j].'</a>',$string).'<br /><iframe title="YouTube video player" class="youtube-player" type="text/html" width="320" height="185" src="http://www.youtube.com/embed/'.substr($links[$j], -11).'" frameborder="0" allowFullScreen></iframe><br />';
-
-
-    }else{
-
-    $string=str_replace($links[$j],'<a href="'.$links[$j].'" rel="nofollow" target="_blank">'.$links[$j].'</a>',$string);
-
-        } 
-
-    } 
-} 
-
-
-
-
-               return ($string);
- }
-
 	
 ?>
 
@@ -165,12 +127,12 @@ for ($j=0;$j<$m;$j++) {
 							<h2>Video lisamine</h2>
 							<dl>
 								
-								<dt>Laulu pealkiri (id):</dt>
+								<dt>Laulu pealkiri:</dt>
 								<dt>
 									<select name="laulu_id">
 										<?php
-											$laulud=array("Smooth Criminal", "Toru-Jüri", "The Best");
-											$valiku_nr=1;
+											$laulud=array("Vali", "Smooth Criminal", "Toru-Jüri", "The Best");
+											$valiku_nr=0;
 											if(isSet($_REQUEST["laulu_id"])){$valiku_nr=intval($_REQUEST["laulu_id"]);} //intval teeb numbriks
 											for($laulu_nr=0; $laulu_nr<count($laulud); $laulu_nr++){
 												echo "<option value='$laulu_nr' >$laulud[$laulu_nr]</option>\n";

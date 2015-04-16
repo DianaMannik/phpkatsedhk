@@ -128,12 +128,12 @@
 									<input type="text" name="laulu_nimi" />
 								</dt>
 								
-								<dt>Esitaja (id):</dt>
+								<dt>Esitaja:</dt>
 								<dt>
 									<select name="esitaja_id">
 										<?php
-											$esitajad=array("Üllar Jörberg", "Michael Jackson", "Freddie Mercury", "Elton John", "Tina Turner");
-											$valiku_nr=1;
+											$esitajad=array("Vali", "Üllar Jörberg", "Michael Jackson", "Freddie Mercury", "Elton John", "Tina Turner");
+											$valiku_nr=0;
 											if(isSet($_REQUEST["esitaja_id"])){$valiku_nr=intval($_REQUEST["esitaja_id"]);} //intval teeb numbriks
 											for($esitaja_nr=0; $esitaja_nr<count($esitajad); $esitaja_nr++){
 												echo "<option value='$esitaja_nr' >$esitajad[$esitaja_nr]</option>\n";
@@ -142,12 +142,12 @@
 									</select><br>
 								</dt>
 								
-								<dt>Album (id):</dt>
+								<dt>Vali album:</dt>
 								<dt>
 									<select name="albumi_id">
 										<?php
-											$albumid=array("1", "2", "3", "4");
-											$valiku_nr=1;
+											$albumid=array("Vali album", "Õnnelootus", "Bad", "The Road to El Dorado", "Foreign Affair");
+											$valiku_nr=0;
 											if(isSet($_REQUEST["albumi_id"])){$valiku_nr=intval($_REQUEST["albumi_id"]);} //intval teeb numbriks
 											for($albumi_nr=0; $albumi_nr<count($albumid); $albumi_nr++){
 												echo "<option value='$albumi_nr' >$albumid[$albumi_nr]</option>\n";
