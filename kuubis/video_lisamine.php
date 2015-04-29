@@ -54,32 +54,32 @@
 			<h2>Sisestatud videod:</h2>
 			<ul>
 				<?php // videode lühike kuvamine
-					$kask=$yhendus->prepare("SELECT id, laulu_id FROM m_videod");
-					$kask->bind_result($id, $laulu_id);
+					$kask=$yhendus->prepare("SELECT m_videod.id, laulu_id, laulu_nimi FROM m_videod JOIN m_laulud ON m_videod.laulu_id=m_laulud.id");
+					$kask->bind_result($id, $laulu_id, $laulu_nimi);
 					$kask->execute();
 					while($kask->fetch()){
 						echo "<li><a href='?id=$id'>".
-							htmlspecialchars($laulu_id)."</a></li>";
+							htmlspecialchars($laulu_nimi)."</a></li>";
 					}
 				?>
 			</ul>
 			<a href='?uus=jah'>Lisa video</a>
 		</div>
-		<div id="sisukiht">		
+		<div id="sisukiht">
 			<?php
+				$urlAlgus = htmlspecialchars('https://www.youtube.com/embed/');
 				if(isSet($_REQUEST["id"])){ // videode detailne kuvamine pärast peale klikkimist
-					$kask=$yhendus->prepare("SELECT id, laulu_id, link FROM m_videod WHERE id=?");
+					$kask=$yhendus->prepare("SELECT id, link FROM m_videod WHERE id=?");
 					$kask->bind_param("i", $_REQUEST["id"]);
-					$kask->bind_result($id, $laulu_id, $link);
+					$kask->bind_result($id, $link);
 					$kask->execute();
 					if($kask->fetch()){
-						echo "Laulu pealkiri (id): ".htmlspecialchars($laulu_id)."</br>";
-						echo "Video: ".htmlspecialchars($link)."</br>";
+						$videoKuva = htmlspecialchars($urlAlgus.$link);
+						?>
+							<!--<iframe width="420" height="315" src= frameborder="0" allowfullscreen></iframe> -->
+						<?php
 						
-						//echo "Esitaja (id): ".htmlspecialchars($esitaja_id)."</br>";
-						//echo "Album (id): ".htmlspecialchars($albumi_id)."</br>";
-						//echo "Helilooja: ".htmlspecialchars($helilooja)."</br>";
-						//echo "Sõnade autor: ".htmlspecialchars($sonade_autor)."</br>";-->
+						echo "Video: <br /><a href='$videoKuva'>".$videoKuva. "</a></br>";
 
 						echo "<br /><a href='?kustuta=$id'>Kustuta</a>"; //kustutamise link
 						echo "<br /><a href='?muutmise_alustus_id=$id'>Muuda</a>"; //muutmise alustamise link
@@ -131,13 +131,14 @@
 								<dt>
 									<select name="laulu_id">
 										<?php
-											$laulud=array("Vali", "Smooth Criminal", "Toru-Jüri", "The Best");
-											$valiku_nr=0;
-											if(isSet($_REQUEST["laulu_id"])){$valiku_nr=intval($_REQUEST["laulu_id"]);} //intval teeb numbriks
-											for($laulu_nr=0; $laulu_nr<count($laulud); $laulu_nr++){
-												echo "<option value='$laulu_nr' >$laulud[$laulu_nr]</option>\n";
+											$kask=$yhendus->prepare("SELECT id, laulu_nimi FROM m_laulud");
+											$kask->bind_result($id, $laulu_nimi);
+											$kask->execute();
+											echo $yhendus->error;
+											while($kask->fetch()){
+												echo "<option value='$id' >$laulu_nimi</option>\n";
 											}
-										?> 
+										?>
 									</select><br>
 								</dt>
 								
