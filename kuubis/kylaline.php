@@ -1,16 +1,11 @@
 <?php
 	$yhendus=new mysqli("localhost", "elisaraeltonnov", "3PF71ojx", "elisaraeltonnov");
 	
-	//$kask=$yhendus->prepare("SELECT id FROM m_albumid");
-	//$kask->bind_result($id);
-	//$kask->execute();
-	
 	if(isSet($_REQUEST["uus_kommentaar"])){ //kommentaari lisamine
 		$kask=$yhendus->prepare(
 			"INSERT INTO m_kommentaarid (albumi_id, kommentaar, kasutajanimi) VALUES (?, ?, ?)");
-		
-		//$kommentaarilisa="\n".$_REQUEST["kommentaar"]." ".date('Y-m-d H:i:s')."\n";
-		$kask->bind_param("iss", $_REQUEST["albumi_id"], $_REQUEST["kommentaar"],  $_REQUEST["kasutajanimi"]);
+		$kommentaarilisa="\n".$_REQUEST["kommentaar"]." ".date('Y-m-d H:i:s')."\n";
+		$kask->bind_param("iss", $_REQUEST["albumi_id"], $kommentaarilisa,  $_REQUEST["kasutajanimi"]);
 		$kask->execute();
 		header("Location: $_SERVER[PHP_SELF]");
 		$yhendus->close();
@@ -29,6 +24,9 @@
 			#jalusekiht{
 				clear: left;
 			}
+			body{
+			   background-image: url("http://tigu.hk.tlu.ee/~elisa-rael.tonnov/PHP/Muusika_lehestik/taust.jpg");			   
+		   }
 		</style>
 	</head>
 	<body>
@@ -76,8 +74,8 @@
 						<h3>Teiste kommentaarid:</h3>
 						<?php
 							$kask=$yhendus->prepare(
-								"SELECT albumi_id, kommentaar, kasutajanimi FROM m_kommentaarid");
-							$kask->bind_result($albumi_id, $kommentaar, $kasutajanimi);
+								"SELECT id, albumi_id, kommentaar, kasutajanimi FROM m_kommentaarid");
+							$kask->bind_result($id, $albumi_id, $kommentaar, $kasutajanimi);
 							$kask->execute();
 							while($kask->fetch()){
 								$albumi_id=htmlspecialchars($albumi_id);
@@ -89,8 +87,7 @@
 								  <td>$kommentaar</td>
 								</tr>";
 							}
-						?>
-				<?php
+
 				}
 				?>
 				

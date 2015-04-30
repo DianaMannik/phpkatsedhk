@@ -42,6 +42,9 @@
 		   #jalusekiht{
 			 clear: left;
 		   }
+			body{
+			   background-image: url("http://tigu.hk.tlu.ee/~elisa-rael.tonnov/PHP/Muusika_lehestik/taust.jpg");			   
+		   }
 		</style>
 	</head>
 	<body>

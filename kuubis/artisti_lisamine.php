@@ -42,6 +42,9 @@
 		   #jalusekiht{
 			 clear: left;
 		   }
+		   body{
+				background-image: url("http://tigu.hk.tlu.ee/~elisa-rael.tonnov/PHP/Muusika_lehestik/taust.jpg");			   
+		   }
 		</style>
 	</head>
 	<body>
@@ -54,7 +57,7 @@
 			<h2>Sisestatud artistid:</h2>
 			<ul>
 				<?php // artistide lühike kuvamine
-					$kask=$yhendus->prepare("SELECT id, esitaja_nimi FROM m_esitajad");
+					$kask=$yhendus->prepare("SELECT id, esitaja_nimi FROM m_esitajad ORDER BY esitaja_nimi ASC");
 					$kask->bind_result($id, $esitaja_nimi);
 					$kask->execute();
 					while($kask->fetch()){
@@ -136,12 +139,14 @@
 								<dt>
 									<select name="kodakondsus">
 										<?php
-											$riigid=array("EST", "GBR", "USA");
-											if(isSet($_REQUEST["kodakondsus"])){$_REQUEST["kodakondsus"];}
-											for($riigi_nr=0; $riigi_nr<count($riigid); $riigi_nr++){
-												echo "<option value='$riigid[$riigi_nr]' >$riigid[$riigi_nr]</option>\n";
+											$kask=$yhendus->prepare("SELECT riigikood, riik FROM m_riigid");
+											$kask->bind_result($riigikood, $riik);
+											$kask->execute();
+											echo $yhendus->error;
+											while($kask->fetch()){
+												echo "<option value='$riigikood' >$riik</option>\n";
 											}
-										?> 
+										?>
 									</select><br>
 								</dt>
 								

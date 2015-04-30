@@ -16,14 +16,19 @@
 	if(isSet($_REQUEST["kustuta"])){ //albumi kustutamine
 		$kask=$yhendus->prepare("DELETE FROM m_albumid WHERE id=?");
 		$kask->bind_param("i", $_REQUEST["kustuta"]);
-		$kask->execute();    
+		$kask->execute();
+		$yhendus->close();
+		exit();
 	}
   
 	if(isSet($_REQUEST["salvestus_nupp"])){ // muutuste salvestamine
 		$kask=$yhendus->prepare("UPDATE m_albumid SET albumi_pealkiri=?, esitaja_id=?, aasta=?, zanr=?, plaadifirma_id=?, hinnang=? WHERE id=?");
 		$kask->bind_param("siisisi", $_REQUEST["albumi_pealkiri"], $_REQUEST["esitaja_id"], $_REQUEST["aasta"],
-			$_REQUEST["zanr"], $_REQUEST["plaadifirma_id"], $_REQUEST["hinnang"], $_REQUEST[muutmise_salvestus_id]); //tänu muutmise_salvestus_id'le teab, millist lehe muutused salvestada
+			$_REQUEST["zanri_nimetus"], $_REQUEST["plaadifirma_id"], $_REQUEST["hinnangu_id"], $_REQUEST["muutmise_salvestus_id"]); //tänu muutmise_salvestus_id'le teab, millist lehe muutused salvestada
 		$kask->execute();
+		header("Location: $_SERVER[PHP_SELF]?message=muudetud");
+		$yhendus->close();
+		exit();
 	}
 ?>
 
@@ -44,9 +49,6 @@
 		   #jalusekiht{
 			 clear: left;
 		   }
-		   body{
-			   background-image: url("http://tigu.hk.tlu.ee/~elisa-rael.tonnov/PHP/Muusika_lehestik/taust.jpg");			   
-		   }
 		</style>
 	</head>
 	<body>
@@ -54,6 +56,9 @@
 			<?php
 				if(isSet($_REQUEST["teade"])){
 					echo "Album salvestatud!";
+				}
+				if(isSet($_REQUEST["message"])){
+					echo "Album muudetud!";
 				}
 			?>
 			<h2>Sisestatud albumid:</h2>
@@ -94,39 +99,93 @@
 						echo "Vigased andmed.";
 					}
 				} 
-		 
+			?>			
+			<?php
 				if(isSet($_REQUEST["muutmise_alustus_id"])){ // albumi andmete muutmine
-					$kask=$yhendus->prepare("SELECT id, albumi_pealkiri, esitaja_id, aasta, zanr, plaadifirma_id, hinnang FROM m_albumid WHERE id=?");
-					$kask->bind_param("i", $_REQUEST["muutmise_alustus_id"]); 
-					$kask->bind_result($id, $albumi_pealkiri, $esitaja_id, $aasta, $zanr, $plaadifirma_id, $hinnang);
-					$kask->execute();
-					if($kask->fetch()){
-						echo "<form action='?'>";
-						echo "<input type='hidden' name='muutmise_salvestus_id' value='$id' />";
-						echo "Albumi pealkiri:<br /> <input type='text' name='albumi_pealkiri' value='".
-													htmlspecialchars($albumi_pealkiri)."' /><br />";
-						echo "Esitaja:<br /> <input type='text' name='esitaja_id' value='".
-													htmlspecialchars($esitaja_id)."' /><br />";
-						echo "Aasta:<br /> <input type='text'  name='aasta' value='".
-													htmlspecialchars($aasta)."' /><br />";
-						echo "Zanr:<br /> <input type='text'  name='zanr' value='".
-													htmlspecialchars($zanr)."' /><br />";
-						echo "Plaadifirma:<br /> <input type='text'  name='plaadifirma_id' value='".
-													htmlspecialchars($plaadifirma_id)."' /><br />";
-						echo "Hinnang:<br /> <input type='text'  name='hinnang' value='".
-													htmlspecialchars($hinnang)."' /><br />";
-													
-													
-						echo "<input type='submit' name='salvestus_nupp' value='Salvesta' />";
-						echo "<input type='submit' name='katkestus_nupp' value='Katkesta' />";
-						echo "</form>";
-						$kask->close(); //NB PANE SEE KÕIKJALE
-					}
-					else {
-						echo "Vigased andmed.";
-					}
+					echo"<form action='?'>";
+					echo"<input type='hidden' name='muutmise_salvestus_id' value='$id' />";
+				?>
+
+							<h2>Albumi muutmine</h2>
+							<dl>
+								<dt>Albumi pealkiri:</dt>
+								<dt>
+									<input type="text" name="albumi_pealkiri" />
+								</dt>
+								
+								<dt>Esitaja:</dt>
+								<dt>
+									<select name="esitaja_id">
+										<?php
+											$kask=$yhendus->prepare("SELECT id, esitaja_nimi FROM m_esitajad");
+											$kask->bind_result($id, $esitaja_nimi);
+											$kask->execute();
+											echo $yhendus->error;
+											while($kask->fetch()){
+												echo "<option value='$id' >$esitaja_nimi</option>\n";
+											}
+										?>
+									</select><br>
+								</dt>
+								
+								<dt>Aasta:</dt>
+								<dt>
+									<input type="text" name="aasta" />
+								</dt>
+								
+								<dt>Zanr:</dt>
+								<dt>
+									<select name="zanri_nimetus">
+										<?php
+											$kask=$yhendus->prepare("SELECT nimetus FROM m_zanrid");
+											$kask->bind_result($nimetus);
+											$kask->execute();
+											echo $yhendus->error;
+											while($kask->fetch()){
+												echo "<option value='$nimetus' >$nimetus</option>\n";
+											}
+										?>
+									</select><br>
+								</dt>
+								
+								<dt>Plaadifirma:</dt>
+								<dt>
+									<select name="plaadifirma_id">
+										<?php
+											$kask=$yhendus->prepare("SELECT id, firma_nimi FROM m_plaadifirmad");
+											$kask->bind_result($id, $firma_nimi);
+											$kask->execute();
+											echo $yhendus->error;
+											while($kask->fetch()){
+												echo "<option value='$id' >$firma_nimi</option>\n";
+											}
+										?>
+									</select><br>
+								</dt>
+								
+								<dt>Hinnang:</dt>
+								<dt>
+									<select name="hinnangu_id">
+										<?php
+											$kask=$yhendus->prepare("SELECT hinnang FROM m_hinnangud");
+											$kask->bind_result($hinnang);
+											$kask->execute();
+											echo $yhendus->error;
+											while($kask->fetch()){
+												echo "<option value='$hinnang' >$hinnang</option>\n";
+											}
+										?> 
+									</select><br>
+								</dt>
+	
+							</dl>
+							<input type="submit" name="salvestus_nupp" value="Salvesta muudatused" />
+							<input type="submit" name="katkestus_nupp" value="Katkesta" />
+						</form>
+					<?php
 				}
-		 
+			?>
+		 <?php
 				if(isSet($_REQUEST["uus"])){ // uue albumi sisestamine
 					?>
 						<form action='?'>

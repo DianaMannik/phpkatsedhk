@@ -36,6 +36,9 @@
 		   #jalusekiht{
 			 clear: left;
 		   }
+		   body{
+			   background-image: url("http://tigu.hk.tlu.ee/~elisa-rael.tonnov/PHP/Muusika_lehestik/taust.jpg");			   
+		   }
 		</style>
 	</head>
 	<body>
@@ -48,12 +51,13 @@
 			<h2>Sisestatud auhinnad:</h2>
 			<ul>
 				<?php // auhindade lühike kuvamine
-					$kask=$yhendus->prepare("SELECT id, auhind, saaja_id, kommentaar FROM m_auhinnad");
-					$kask->bind_result($id, $auhind, $saaja_id, $kommentaar);
+					$kask=$yhendus->prepare("SELECT m_auhinnad.id, auhind, saaja_id, esitaja_nimi FROM m_auhinnad
+					JOIN m_esitajad ON m_auhinnad.saaja_id=m_esitajad.id ORDER BY esitaja_nimi ASC");
+					$kask->bind_result($id, $auhind, $saaja_id, $esitaja_nimi);
 					$kask->execute();
 					while($kask->fetch()){
 						echo "<li><a href='?id=$id'>".
-							htmlspecialchars($auhind)."</a></li>";
+							htmlspecialchars($esitaja_nimi).": ".htmlspecialchars($auhind)."</a></li>";
 					}
 				?>
 			</ul>
@@ -117,13 +121,14 @@
 								<dt>
 									<select name="saaja_id">
 										<?php
-											$esitajad=array("Vali saaja", "Üllar Jörberg", "Michael Jackson", "Freddie Mercury", "Elton John", "Tina Turner");
-											$valiku_nr=0;
-											if(isSet($_REQUEST["saaja_id"])){$valiku_nr=intval($_REQUEST["saaja_id"]);} //intval teeb numbriks
-											for($esitaja_nr=0; $esitaja_nr<count($esitajad); $esitaja_nr++){
-												echo "<option value='$esitaja_nr' >$esitajad[$esitaja_nr]</option>\n";
+											$kask=$yhendus->prepare("SELECT id, esitaja_nimi FROM m_esitajad");
+											$kask->bind_result($id, $esitaja_nimi);
+											$kask->execute();
+											echo $yhendus->error;
+											while($kask->fetch()){
+												echo "<option value='$id' >$esitaja_nimi</option>\n";
 											}
-										?> 
+										?>
 									</select><br>
 								</dt>
 								
